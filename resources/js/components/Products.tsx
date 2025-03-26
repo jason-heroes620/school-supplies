@@ -41,7 +41,6 @@ const Products = ({ setData, data, handleAddProduct }: any) => {
         axios.get(route("product-variants", productId)).then((response) => {
             setVariants(response.data.variant);
             setImages(response.data.images);
-            console.log(response.data.images);
         });
     };
 

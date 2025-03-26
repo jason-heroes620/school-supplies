@@ -103,7 +103,7 @@ const PreOrder = () => {
 
         setOpenDialog(false);
     };
-    console.log(data);
+
     return (
         <div className="mx-auto max-w-2xl">
             <Toaster />
