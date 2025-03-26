@@ -2,11 +2,18 @@
 
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/storage-link', function () {
+    Artisan::call('storage:link');
+    return "Storage Linke";
+});
+
 
 Route::get('/pre-order', [ProductController::class, 'preOrder'])->name('pre-order');
 
