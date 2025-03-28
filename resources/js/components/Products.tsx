@@ -70,48 +70,70 @@ const Products = ({ setData, data, handleAddProduct }: any) => {
                 }}
                 required
             />
-            <div className="flex flex-row gap-4 py-4 overflow-x-auto">
-                {images &&
-                    images.map((image: any, index: number) => (
-                        <Dialog key={index}>
-                            <DialogTrigger>
-                                <img
-                                    key={index}
-                                    src={image.url}
-                                    alt={image.name}
-                                    className="w-20 h-20 cursor-pointer border"
-                                    onClick={() => setSelectedImage(image.url)}
-                                />
-                            </DialogTrigger>
-                            <DialogContent>
-                                <DialogHeader>
-                                    <DialogTitle></DialogTitle>
-                                    <DialogDescription className="flex justify-center">
-                                        <img src={selectedImage} alt="" />
-                                    </DialogDescription>
-                                </DialogHeader>
-                            </DialogContent>
-                        </Dialog>
-                    ))}
+            <div>
+                {images.length > 0 && (
+                    <div className="flex flex-row gap-4 py-4 overflow-x-auto">
+                        {images.map((image: any, index: number) => (
+                            <Dialog key={index}>
+                                <DialogTrigger>
+                                    <div className=" border p-2 rounded-md">
+                                        <img
+                                            key={index}
+                                            src={image.url}
+                                            alt={image.name}
+                                            className="min-w-20 h-20 cursor-pointer"
+                                            onClick={() =>
+                                                setSelectedImage(image.url)
+                                            }
+                                        />
+                                        <span className="text-sm">
+                                            {image.variant}
+                                        </span>
+                                    </div>
+                                </DialogTrigger>
+                                <DialogContent>
+                                    <DialogHeader>
+                                        <DialogTitle></DialogTitle>
+                                        <DialogDescription className="flex justify-center">
+                                            <img src={selectedImage} alt="" />
+                                        </DialogDescription>
+                                    </DialogHeader>
+                                </DialogContent>
+                            </Dialog>
+                        ))}
+                    </div>
+                )}
             </div>
-            <div className="flex flex-row gap-4 py-4">
-                {variants.map((variant: any) => (
-                    <button
-                        key={variant.product_variant_id}
-                        onClick={(e) =>
-                            handleVariantChange(e, variant.product_variant_id)
-                        }
-                        className={`border border-gray-300 rounded-md px-4 py-2 ${
-                            selectedVariant.product_variant_id ===
-                            variant.product_variant_id
-                                ? "bg-orange-200"
-                                : ""
-                        }`}
-                    >
-                        {variant.variant}
-                    </button>
-                ))}
+
+            <div>
+                {variants.length > 0 && (
+                    <div className="py-2">
+                        <span>Choose Variant: </span>
+                        <div className="flex flex-row gap-4 py-4 overflow-x-auto">
+                            {variants.map((variant: any) => (
+                                <button
+                                    key={variant.product_variant_id}
+                                    onClick={(e) =>
+                                        handleVariantChange(
+                                            e,
+                                            variant.product_variant_id
+                                        )
+                                    }
+                                    className={`border border-gray-300 rounded-md px-4 py-2 ${
+                                        selectedVariant.product_variant_id ===
+                                        variant.product_variant_id
+                                            ? "bg-orange-200 border-dashed border-orange-300"
+                                            : ""
+                                    }`}
+                                >
+                                    {variant.variant}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                )}
             </div>
+
             {selectedVariant.product_variant_id && (
                 <div className="border border-gray-300 rounded-md py-4 px-6">
                     <div>

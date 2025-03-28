@@ -40,7 +40,7 @@ class ProductController extends Controller
         $images = [];
         foreach ($variant as $v) {
             if ($this->getImage($v['product_image']))
-                array_push($images, ['url' => $this->getImage($v['product_image'])]);
+                array_push($images, ['url' => $this->getImage($v['product_image']), 'variant' => $v['variant']]);
         }
         return response()->json(compact('variant', 'images'));
     }
