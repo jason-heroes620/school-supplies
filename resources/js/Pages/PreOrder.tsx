@@ -92,16 +92,16 @@ const PreOrder = () => {
                         duration: 5000,
                     }
                 );
+                setOpenDialog(false);
                 setTimeout(function () {
                     window.location.reload();
                 }, 5000);
             },
             onError: () => {
                 toast.error("Failed to submit order.");
+                setOpenDialog(false);
             },
         });
-
-        setOpenDialog(false);
     };
 
     return (
@@ -270,7 +270,9 @@ const PreOrder = () => {
                             onOpenChange={() => setOpenDialog(!openDialog)}
                         >
                             <AlertDialogTrigger asChild>
-                                <Button variant="outline">Submit Order</Button>
+                                <Button variant="outline" disabled={processing}>
+                                    Submit Order
+                                </Button>
                             </AlertDialogTrigger>
                             <AlertDialogContent>
                                 <AlertDialogHeader>
