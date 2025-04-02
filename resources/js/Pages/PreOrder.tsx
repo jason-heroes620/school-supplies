@@ -228,7 +228,9 @@ const PreOrder = () => {
                             required
                         />
                         {emailError && (
-                            <span className="text-red-500">{emailError}</span>
+                            <span className="text-red-500 italic text-sm">
+                                {emailError}
+                            </span>
                         )}
                     </div>
                 </div>

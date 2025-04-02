@@ -21,6 +21,7 @@ export interface Variant {
     uom: string;
     min_order: number;
     code: string;
+    available: number;
 }
 
 const Products = ({ setData, data, handleAddProduct }: any) => {
@@ -30,7 +31,6 @@ const Products = ({ setData, data, handleAddProduct }: any) => {
     const [orderQty, setOrderQty] = useState(0);
     const [selectedVariant, setSelectedVariant] = useState<any>({});
     const [selectedImage, setSelectedImage] = useState("");
-
     const getProducts = () => {
         axios.get(route("products")).then((response) => {
             setProducts(response.data.products);
@@ -76,17 +76,27 @@ const Products = ({ setData, data, handleAddProduct }: any) => {
                         {images.map((image: any, index: number) => (
                             <Dialog key={index}>
                                 <DialogTrigger>
-                                    <div className=" border p-2 rounded-md">
+                                    <div className="border p-2 rounded-md">
                                         <img
                                             key={index}
                                             src={image.url}
                                             alt={image.name}
-                                            className="min-w-20 h-20 cursor-pointer"
+                                            className={`min-w-20 h-20 cursor-pointer ${
+                                                image.available === 1
+                                                    ? "opacity-60 grayscale"
+                                                    : ""
+                                            }`}
                                             onClick={() =>
                                                 setSelectedImage(image.url)
                                             }
                                         />
-                                        <span className="text-sm">
+                                        <span
+                                            className={`text-sm ${
+                                                image.available === 1
+                                                    ? "opacity-60 grayscale"
+                                                    : ""
+                                            }`}
+                                        >
                                             {image.variant}
                                         </span>
                                     </div>
@@ -124,11 +134,24 @@ const Products = ({ setData, data, handleAddProduct }: any) => {
                                         variant.product_variant_id
                                             ? "bg-orange-200 border-dashed border-orange-300"
                                             : ""
+                                    } ${
+                                        variant.available === 1
+                                            ? "bg-gray-200"
+                                            : ""
                                     }`}
+                                    disabled={
+                                        variant.available === 1 ? true : false
+                                    }
                                 >
                                     {variant.variant}
                                 </button>
                             ))}
+                        </div>
+                        <div className="flex flex-row gap-4 py-4 items-center">
+                            <div className="w-4 h-4 bg-gray-200"></div>
+                            <span className="text-sm italic">
+                                Wait for 2nd shipment
+                            </span>
                         </div>
                     </div>
                 )}

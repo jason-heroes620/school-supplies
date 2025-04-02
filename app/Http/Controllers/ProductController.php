@@ -33,7 +33,7 @@ class ProductController extends Controller
 
     public function getProductVariants(Request $req)
     {
-        $variant = Products::select('product_variant_id', 'variants.variant_id', 'variant', 'price', 'min_order', 'code', 'uom', 'product_image')
+        $variant = Products::select('product_variant_id', 'variants.variant_id', 'variant', 'price', 'min_order', 'code', 'uom', 'product_image', 'available')
             ->leftJoin('product_variant', 'products.product_id', '=', 'product_variant.product_id')
             ->leftJoin('variants', 'product_variant.variant_id', '=', 'variants.variant_id')
             ->where('products.product_id', $req->id)
@@ -42,7 +42,7 @@ class ProductController extends Controller
         $images = [];
         foreach ($variant as $v) {
             if ($this->getImage($v['product_image']))
-                array_push($images, ['url' => $this->getImage($v['product_image']), 'variant' => $v['variant']]);
+                array_push($images, ['url' => $this->getImage($v['product_image']), 'variant' => $v['variant'], 'available' => $v['available']]);
         }
         return response()->json(compact('variant', 'images'));
     }
