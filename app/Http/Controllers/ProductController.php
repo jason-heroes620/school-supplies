@@ -24,7 +24,7 @@ class ProductController extends Controller
         $products = Products::select('product_id as value', 'product_name as label')
             ->where('category_id', $supplies['category_id'])
             ->where('product_status', 0)
-            ->orderBy('product_name')
+            ->orderBy('sort_order', 'asc')
             ->get();
 
 
