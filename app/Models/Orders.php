@@ -14,6 +14,7 @@ class Orders extends Model
         'school_name',
         'contact_person',
         'contact_no',
+        'email',
         'order_total',
     ];
 }

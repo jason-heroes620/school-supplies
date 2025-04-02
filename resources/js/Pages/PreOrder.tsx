@@ -35,6 +35,7 @@ type OrderForm = {
     schoolName: string;
     contactPerson: string;
     contactNo: string;
+    email: string;
     orders: any[];
     orderTotal: number;
 };
@@ -42,11 +43,13 @@ type OrderForm = {
 const PreOrder = () => {
     const [orders, setOrders] = useState<Order[]>([]);
     const [openDialog, setOpenDialog] = useState(false);
+    const [emailError, setEmailError] = useState("");
 
     const { setData, data, post, processing } = useForm<OrderForm>({
         schoolName: "",
         contactPerson: "",
         contactNo: "",
+        email: "",
         orders: orders,
         orderTotal: 0,
     });
@@ -70,7 +73,24 @@ const PreOrder = () => {
             price: variant.price,
             uom: variant.uom,
         };
-        const newOrder = [...orders, order];
+        var newOrder = [];
+        const exist = orders.find(
+            (o) => o.productVariantId === order.productVariantId
+        );
+        if (exist) {
+            newOrder = orders.map((o) => {
+                if (o.productVariantId === order.productVariantId) {
+                    return {
+                        ...o, // Copy existing properties
+                        qty: o.qty + order.qty, // Update qty
+                    };
+                }
+                return o; // Keep other items unchanged
+            });
+        } else {
+            newOrder = [...orders, order];
+        }
+
         setOrders(newOrder);
         const orderTotal = newOrder.reduce(
             (acc, order) => acc + order.qty * order.price,
@@ -134,10 +154,17 @@ const PreOrder = () => {
                 </div>
             </div>
 
-            <form action="" className="flex flex-col gap-4">
+            <form
+                onSubmit={handleSubmit}
+                onSubmitCapture={handleSubmit}
+                className="flex flex-col gap-4"
+            >
                 <div className="flex flex-col py-4 gap-4">
                     <div>
-                        <label htmlFor="">Your School Name</label>
+                        <label htmlFor="">
+                            Your School Name{" "}
+                            <span className="text-red-500">*</span>
+                        </label>
                         <Input
                             placeholder=""
                             maxLength={150}
@@ -150,6 +177,7 @@ const PreOrder = () => {
                     <div>
                         <label htmlFor="">
                             What do your students call you when they need help?{" "}
+                            <span className="text-red-500">*</span>
                         </label>
                         <Input
                             placeholder=""
@@ -163,7 +191,8 @@ const PreOrder = () => {
                     <div>
                         <label htmlFor="">
                             If we need to send a "your supplies have arrived"
-                            happy dance, what number do we text?
+                            happy dance, what number do we text?{" "}
+                            <span className="text-red-500">*</span>
                         </label>
                         <Input
                             placeholder=""
@@ -175,6 +204,40 @@ const PreOrder = () => {
                             required
                         />
                     </div>
+                    <div>
+                        <label htmlFor="">
+                            Your email address{" "}
+                            <span className="text-red-500">*</span>
+                        </label>
+                        <Input
+                            placeholder=""
+                            type="email"
+                            maxLength={14}
+                            onChange={(e) => {
+                                if (
+                                    /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(
+                                        e.target.value
+                                    )
+                                ) {
+                                    setData("email", e.target.value);
+                                    setEmailError("");
+                                } else {
+                                    setEmailError("Invalid email address");
+                                }
+                            }}
+                            required
+                        />
+                        {emailError && (
+                            <span className="text-red-500">{emailError}</span>
+                        )}
+                    </div>
+                </div>
+                <div>
+                    <span className="text-red-500">* </span>
+                    <span className="italic text-sm">
+                        Fields marked with
+                        <span className="text-red-500"> * </span> are required
+                    </span>
                 </div>
                 <div>
                     <hr />
@@ -239,7 +302,7 @@ const PreOrder = () => {
                     {orders.length > 0 && (
                         <div className="grid grid-cols-8 py-2">
                             <div className="col-span-7 flex justify-end">
-                                <span className="font-bold">Total</span>
+                                <span className="font-bold">Total Amount:</span>
                             </div>
                             <div className="flex justify-end">
                                 <span className="font-bold">
@@ -252,19 +315,29 @@ const PreOrder = () => {
                                     )}
                                 </span>
                             </div>
+                            <div className="col-span-8">
+                                <div className="flex justify-end">
+                                    <span className="text-red-500">*</span>
+                                    <span className="italic text-sm">
+                                        (Delivery charges not included)
+                                    </span>
+                                </div>
+                            </div>
                         </div>
                     )}
                     {orders.length === 0 && (
-                        <div className="py-4">
+                        <div className="py-2">
                             <span>No orders added yet.</span>
                         </div>
                     )}
                 </div>
-                <div className="flex justify-end py-4">
+                <div className="flex justify-end py-2">
                     {orders.length > 0 &&
                     data.schoolName !== "" &&
                     data.contactPerson !== "" &&
-                    data.contactNo !== "" ? (
+                    data.contactNo !== "" &&
+                    data.email !== "" &&
+                    emailError === "" ? (
                         <AlertDialog
                             open={openDialog}
                             onOpenChange={() => setOpenDialog(!openDialog)}
@@ -286,8 +359,9 @@ const PreOrder = () => {
                                         Cancel
                                     </AlertDialogCancel>
                                     <AlertDialogAction
-                                        onClick={handleSubmit}
+                                        type="submit"
                                         disabled={processing}
+                                        onClick={handleSubmit}
                                     >
                                         Continue
                                     </AlertDialogAction>

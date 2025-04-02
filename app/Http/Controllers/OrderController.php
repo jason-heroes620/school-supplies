@@ -28,6 +28,7 @@ class OrderController extends Controller
                 'school_name' => $req->input('schoolName'),
                 'contact_person' => $req->input('contactPerson'),
                 'contact_no' => $req->input('contactNo'),
+                'email' => $req->input('email'),
                 'order_total' => $req->input('orderTotal'),
             ]);
 
@@ -63,6 +64,7 @@ class OrderController extends Controller
                 'orders.school_name',
                 'orders.contact_person',
                 'orders.contact_no',
+                'orders.email',
                 'order_items.order_qty',
                 'order_items.price',
                 'order_items.uom',
@@ -109,6 +111,7 @@ class OrderController extends Controller
                 json_encode([
                     "text_mkpf62tv" => $item['contact_person'],
                     "text_mkpfck1a" => $item['contact_no'],
+                    "text_mkpmb950" => $item['email'],
                     "date4" => ['date' => $date->format('Y-m-d'), 'time' => $date->format('H:i:s')],
                     "text_mkpfqfy" => $item['product_name'],
                     "text_mkpfbw2d" => $item['variant'] . " - " . $item['code'],
