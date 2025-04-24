@@ -11,10 +11,7 @@ class Orders extends Model
     protected $fillable = [
         'order_id',
         'order_no',
-        'school_name',
-        'contact_person',
-        'contact_no',
-        'email',
+        'school_id',
         'order_total',
     ];
 }

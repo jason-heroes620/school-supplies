@@ -31,6 +31,7 @@ const Products = ({ setData, data, handleAddProduct }: any) => {
     const [orderQty, setOrderQty] = useState(0);
     const [selectedVariant, setSelectedVariant] = useState<any>({});
     const [selectedImage, setSelectedImage] = useState("");
+
     const getProducts = () => {
         axios.get(route("products")).then((response) => {
             setProducts(response.data.products);
@@ -60,7 +61,7 @@ const Products = ({ setData, data, handleAddProduct }: any) => {
     }, []);
 
     return (
-        <div>
+        <div className="flex flex-col justify-center w-full md:max-w-6xl lg:max-w-7xl ">
             <SelectInput
                 options={products}
                 selected={data.product}
@@ -70,18 +71,18 @@ const Products = ({ setData, data, handleAddProduct }: any) => {
                 }}
                 required
             />
-            <div>
+            <div className="flex">
                 {images.length > 0 && (
                     <div className="flex flex-row gap-4 py-4 overflow-x-auto">
                         {images.map((image: any, index: number) => (
                             <Dialog key={index}>
-                                <DialogTrigger>
-                                    <div className="border p-2 rounded-md">
+                                <DialogTrigger disabled={image.available === 1}>
+                                    <div className="flex flex-col border p-2 rounded-md justify-center">
                                         <img
                                             key={index}
                                             src={image.url}
                                             alt={image.name}
-                                            className={`min-w-20 h-20 cursor-pointer ${
+                                            className={`min-w-20 h-20 cursor-pointer object-cover ${
                                                 image.available === 1
                                                     ? "opacity-60 grayscale"
                                                     : ""
@@ -91,7 +92,7 @@ const Products = ({ setData, data, handleAddProduct }: any) => {
                                             }
                                         />
                                         <span
-                                            className={`text-sm ${
+                                            className={`text-xs font-bold min-w-20 py-2 ${
                                                 image.available === 1
                                                     ? "opacity-60 grayscale"
                                                     : ""
@@ -115,7 +116,7 @@ const Products = ({ setData, data, handleAddProduct }: any) => {
                 )}
             </div>
 
-            <div>
+            <div className="">
                 {variants.length > 0 && (
                     <div className="py-2">
                         <span>Choose Variant: </span>
@@ -197,7 +198,6 @@ const Products = ({ setData, data, handleAddProduct }: any) => {
                             variant="default"
                             onClick={(e) => {
                                 handleAddProduct(
-                                    e,
                                     products.find(
                                         (p: any) => p.value === data.product
                                     ),

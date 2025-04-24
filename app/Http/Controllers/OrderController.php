@@ -25,10 +25,6 @@ class OrderController extends Controller
             Orders::create([
                 'order_id' => $orderId,
                 'order_no' => $orderNo,
-                'school_name' => $req->input('schoolName'),
-                'contact_person' => $req->input('contactPerson'),
-                'contact_no' => $req->input('contactNo'),
-                'email' => $req->input('email'),
                 'order_total' => $req->input('orderTotal'),
             ]);
 

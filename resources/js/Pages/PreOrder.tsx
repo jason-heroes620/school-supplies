@@ -18,18 +18,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner";
-
-export interface Order {
-    productId: string;
-    product: string;
-    variantId: string;
-    productVariantId: string;
-    code: string;
-    variant: string;
-    qty: number;
-    price: number;
-    uom: string;
-}
+import { Order } from "@/types/index";
 
 type OrderForm = {
     schoolName: string;
@@ -103,7 +92,7 @@ const PreOrder = () => {
     const handleSubmit = (e: any) => {
         e.preventDefault();
 
-        post(route("order.create"), {
+        post(route("preorder.create"), {
             preserveScroll: true,
             onSuccess: () => {
                 toast.success(
@@ -212,7 +201,7 @@ const PreOrder = () => {
                         <Input
                             placeholder=""
                             type="email"
-                            maxLength={14}
+                            maxLength={150}
                             onChange={(e) => {
                                 if (
                                     /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(

@@ -42,7 +42,7 @@ class ProductController extends Controller
         $images = [];
         foreach ($variant as $v) {
             if ($this->getImage($v['product_image']))
-                array_push($images, ['url' => $this->getImage($v['product_image']), 'variant' => $v['variant'], 'available' => $v['available']]);
+                array_push($images, ['url' => config('app.url') . '/' . $this->getImage($v['product_image']), 'variant' => $v['variant'], 'available' => $v['available']]);
         }
         return response()->json(compact('variant', 'images'));
     }
@@ -51,9 +51,32 @@ class ProductController extends Controller
     {
         if ($product) {
             $file_name = explode('/', $product);
-            $image = "storage/productImages/" . $file_name[sizeof($file_name) - 1];
+            $image = "storage/productImage/" . $file_name[sizeof($file_name) - 1];
             return $image;
         }
         return;
+    }
+
+    public function index(Request $req)
+    {
+        $category = $req->category === 'supplies' ? 'School Supplies' : 'Food Supplies';
+        $category_id = Category::leftJoin('category_description', 'category.category_id', '=', 'category_description.category_id')
+            ->select('category.category_id')
+            ->where('category_description.name', $category)
+            ->first();
+
+        $variants = Products::select('product_variant_id', 'variants.variant_id', 'variant', 'price', 'min_order', 'code', 'uom', 'product_image', 'available')
+            ->leftJoin('product_variant', 'products.product_id', '=', 'product_variant.product_id')
+            ->leftJoin('variants', 'product_variant.variant_id', '=', 'variants.variant_id')
+            ->where('products.product_id', $req->id)
+            ->orderBy('variant')
+            ->get();
+        // $images = [];
+        // foreach ($variant as $v) {
+        //     if ($this->getImage($v['product_image']))
+        //         array_push($images, ['url' => $this->getImage($v['product_image']), 'variant' => $v['variant'], 'available' => $v['available']]);
+        // }
+
+        return Inertia::render('Products/' . ucfirst($req->category), compact('variants'));
     }
 }
