@@ -20,6 +20,11 @@ Route::get('/', function () {
     ]);
 });
 
+Route::get('/config-update', function () {
+    Artisan::call('config:cache');
+    return "config cached";
+});
+
 Route::get('/storage-link', function () {
     Artisan::call('storage:link');
     return "Storage Linke";
