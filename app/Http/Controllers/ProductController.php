@@ -37,6 +37,7 @@ class ProductController extends Controller
             ->leftJoin('product_variant', 'products.product_id', '=', 'product_variant.product_id')
             ->leftJoin('variants', 'product_variant.variant_id', '=', 'variants.variant_id')
             ->where('products.product_id', $req->id)
+            ->orderBy('available', 'asc')
             ->orderBy('variant')
             ->get();
         $images = [];
